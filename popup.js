@@ -2,7 +2,6 @@ let connection = chrome.runtime.connect({name: 'popup'})
 let search_input = document.querySelector('.search-group__input')
 let file_format_select = document.querySelector('.format-filter__select')
 let clear_files_button = document.querySelector('.clear_files')
-let blobs = {}
 
 search_input.addEventListener('keyup',filter_files)
 file_format_select.addEventListener('change',filter_files)

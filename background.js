@@ -279,17 +279,13 @@ function download_file(request_url,video_url){
                               .map(data => data.content)
             let file = new File(sorted_data,file_name,{type: file_mime})
             let reader = new FileReader()
-            reader.addEventListener('load',() => {
+            reader.onload = () => {
                 data.files[file_signature].file = reader.result
                 chrome.storage.local.set({files: data.files})
-                .then(() => {
-                    chrome.action.getBadgeText({})
-                    .then(text => {
-                        let new_text = text ? (parseInt(text)+1).toString() : '1'
-                        chrome.action.setBadgeText({text: new_text})
-                    })
-                })
-            })
+                .then(() => chrome.action.getBadgeText({}))
+                .then(text => text ? (parseInt(text)+1).toString() : '1')
+                .then(new_text => chrome.action.setBadgeText({text: new_text}))
+            }
             reader.readAsDataURL(file)
         })
     })
@@ -303,11 +299,10 @@ function erase_data(){
 
 function erase_file(request_url,video_url){
     chrome.action.getBadgeText({})
-    .then(text => {
-        text = parseInt(text)
-        let new_text = text ? (text-1).toString() : '0'
-        chrome.action.setBadgeText({text: new_text})
-    })
+    .then(text => parseInt(text))
+    .then(text => text ? (text-1).toString() : '0')
+    .then(new_text => chrome.action.setBadgeText({text: new_text}))
+
     let file_signature = get_signature(request_url,video_url)
     delete requests[file_signature]
     delete blobs[file_signature]
@@ -338,6 +333,5 @@ chrome.runtime.onConnect.addListener(conn => {
 })
 
 chrome.storage.local.get(['requests'])
-.then(data => {
-    requests = data.requests ? data.requests : {}
-})
+.then(data => data.requests ? data.requests : {})
+.then(data => requests = data)
