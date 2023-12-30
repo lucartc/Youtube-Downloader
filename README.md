@@ -25,3 +25,8 @@
 Brief usage video:
 
 https://user-images.githubusercontent.com/18648391/235040328-7b71b6fa-e585-48bd-8513-9bd695cba8e8.mp4
+
+
+## Issues
+
+My current guess is that Youtube is sending each video/audio "frame" in a ISO Base Type container, in a way that if I simply join all frames together they wont play nicely, since it'll probably break the ISO format. I think that I'll need to first remove each frame bytes from its ISO packaging, and only when all data bytes have been removed I'll create a new ISO Base Type container and push all the data in.
